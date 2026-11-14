@@ -12,7 +12,8 @@
         "ms-vscode.cmake-tools",
         "ms-python.python",
         "ms-python.vscode-pylance",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "ms-vscode.cpptools-extension-pack"
       ],
       "settings": {
         "files.insertFinalNewline": true,
