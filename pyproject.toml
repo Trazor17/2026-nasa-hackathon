@@ -7,7 +7,9 @@ authors = [
     { name = "Trazor", email = "trazorcreations@gmail.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "pillow>=13.0.0",
+]
 
 [project.scripts]
 2026-nasa-hackathon = "_2026_nasa_hackathon:main"
