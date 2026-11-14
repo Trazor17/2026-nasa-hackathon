@@ -1,0 +1,14 @@
+"Bradbury Landing";137.44163;-4.58947
+"The Rocknest";137.44793;-4.59006
+"Glenelg";137.44833;-4.59001
+"Darwin Outcrop";137.42628;-4.60707
+"The Kimberly";137.40217;-4.63634
+"Pahrump Hills";137.37724;-4.66241
+"Marias Pass";137.3714;-4.66794
+"Bagnold Dunes";137.36569;-4.67907
+"Bagnold Dunes West End";137.35778;-4.67856
+"Murray Buttes";137.35334;-4.6954
+"Bagnold Dunes South";137.35722;-4.7112
+"Vera Rubin Ridge";137.36832;-4.72053
+"Top of Vera Rubin Ridge";137.37273;-4.72369
+"Hematite Hotspot";137.38036;-4.72476
