@@ -1,0 +1,20 @@
+[project]
+name = "2026-nasa-hackathon"
+version = "0.1.0"
+description = "2026 NASA Space Apps Challenge Project"
+readme = "README.md"
+authors = [
+    { name = "Trazor", email = "trazorcreations@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+2026-nasa-hackathon = "_2026_nasa_hackathon:main"
+
+[tool.uv.build-backend]
+module-name = "_2026_nasa_hackathon"
+
+[build-system]
+requires = ["uv_build>=0.13.8,<0.14.0"]
+build-backend = "uv_build"
