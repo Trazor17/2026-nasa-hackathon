@@ -1,6 +1,8 @@
 Python:
 - pillow
 - numpy
+- pandas
+- opencv-python
 
 C++:
 - nlohmann/json.hpp
