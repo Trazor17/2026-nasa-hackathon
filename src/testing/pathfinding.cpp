@@ -1,3 +1,4 @@
+#include "pathfinding.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -8,53 +9,22 @@
 #include <algorithm>
 using namespace std;
 
-struct Pixel {
-    int x;
-    int y;
-    double data;
-};
 
-struct LongLatPixel {
-    int x;
-    int y;
-    double longitude;
-    double latitude;
-};
-
-struct AStarNode {
-    int x;
-    int y;
-    double fScore; // total estimated cost(exact path cost + estimated future cost)
-
-    // flips queue organization so the lowest score items are on top
-    bool operator>(const AStarNode& other) const {
-        return fScore > other.fScore;
-    }
-};
-
-vector<vector<string>> getDataFromFile(const string&);
-vector<vector<Pixel>> parseData(const vector<vector<string>> &);
-vector<vector<LongLatPixel>> parseLongLatData(const vector<vector<string>> &,int,int);
-LongLatPixel getCoordsFromLongLat(const vector<vector<LongLatPixel>>&,double,double);
-double calcMoveCost(int,int,int,int,vector<vector<Pixel>>&,vector<vector<Pixel>>&,vector<vector<Pixel>>&,vector<vector<Pixel>>&);
-vector<pair<int,int>> findPathAStar(int,int,int,int,int,int,vector<vector<Pixel>>&,vector<vector<Pixel>>&,vector<vector<Pixel>>&,vector<vector<Pixel>>&);
-vector<pair<int,int>> generatePath(double,double,double,double);
-
-int main() {
+/*int main() {
     auto path = generatePath(137.13782, -4.26659, 137.70911, -4.89144);
     return 0;
-}
+}*/
 
 vector<pair<int,int>> generatePath(double startLongitude,double startLatitude,double endLongitude,double endLatitude) {
     int imageWidth = 1105;
     int imageHeight = 1230;
 
     cout << "Getting data from files..." << endl;
-    vector<vector<string>> longLatData = getDataFromFile("pixelLongitudes&Latitudes.csv");
-    vector<vector<string>> elevationData = getDataFromFile("elevation_data.csv");
-    vector<vector<string>> slopeData = getDataFromFile("local_slope_inclanation.csv");
-    vector<vector<string>> shadeData = getDataFromFile("shade_data.csv");
-    vector<vector<string>> windData = getDataFromFile("surface_wind_stress.csv");
+    vector<vector<string>> longLatData = getDataFromFile("src/LongLatCalculator/pixelLongitudes&Latitudes.csv");
+    vector<vector<string>> elevationData = getDataFromFile("src/elevation_calc/elevation_data.csv");
+    vector<vector<string>> slopeData = getDataFromFile("src/local_slope_inclanation_calc/local_slope_inclanation.csv");
+    vector<vector<string>> shadeData = getDataFromFile("src/shade_calc/shade_data.csv");
+    vector<vector<string>> windData = getDataFromFile("src/surface_wind_stress_calc/surface_wind_stress.csv");
 
     cout << "Parsing data..." << endl;
     vector<vector<LongLatPixel>> allLongLatPixels = parseLongLatData(longLatData, imageHeight, imageWidth);
