@@ -3,6 +3,7 @@
 #include <vector>
 #include <sstream>
 #include <cmath>
+#include <limits>
 using namespace std;
 
 struct Pixel {
@@ -20,13 +21,13 @@ struct LongLatPixel {
 
 vector<vector<string>> getDataFromFile(const string&);
 vector<vector<Pixel>> parseData(const vector<vector<string>> &);
-vector<vector<LongLatPixel>> parseLongLatData(const vector<vector<string>> &, const int, const int);
-LongLatPixel getCoordsFromLongLat(const vector<LongLatPixel>&, double, double);
+vector<vector<LongLatPixel>> parseLongLatData(const vector<vector<string>> &, int, int);
+LongLatPixel getCoordsFromLongLat(const vector<vector<LongLatPixel>>&, double, double);
 
 int main() {
     int imageWidth = 1105;
     int imageHeight = 1230;
-    int vectorLength = imageWidth * imageHeight;
+
     vector<vector<string>> longLatData = getDataFromFile("pixelLongitudes&Latitudes.csv");
     vector<vector<string>> elevationData = getDataFromFile("elevation_data.csv");
     vector<vector<string>> slopeData = getDataFromFile("local_slope_inclanation.csv");
@@ -43,91 +44,6 @@ int main() {
     double startLatitude;
     double endLongitude;
     double endLatitude;
-
-    int rowNum = 0;
-    int totalNum = 0;
-    cout << "LongLat" << endl;
-    for (const auto& row : allLongLatPixels) {
-        for (const auto& pixel : row) {
-            //cout << pixel.data << " ";
-            //if (pixel.data != 0) {
-            totalNum++;
-            //}
-        }
-        //cout << "endline" << endl;'
-        rowNum++;
-    }
-    cout << totalNum << "(totalNum)" << endl;
-    cout << rowNum << "(rowNum)" << endl;
-    cout << (totalNum / rowNum) << "(colNum)" << endl;
-
-    rowNum = 0;
-    totalNum = 0;
-    cout << "Height" << endl;
-    for (const auto& row : allHeightPixels) {
-        for (const auto& pixel : row) {
-            //cout << pixel.data << " ";
-            //if (pixel.data != 0) {
-            totalNum++;
-            //}
-        }
-        //cout << "endline" << endl;'
-        rowNum++;
-    }
-    cout << totalNum << "(totalNum)" << endl;
-    cout << rowNum << "(rowNum)" << endl;
-    cout << (totalNum / rowNum) << "(colNum)" << endl;
-
-    rowNum = 0;
-    totalNum = 0;
-    cout << "Slope" << endl;
-    for (const auto& row : allSlopePixels) {
-        for (const auto& pixel : row) {
-            //cout << pixel.data << " ";
-            //if (pixel.data != 0) {
-            totalNum++;
-            //}
-        }
-        //cout << "endline" << endl;'
-        rowNum++;
-    }
-    cout << totalNum << "(totalNum)" << endl;
-    cout << rowNum << "(rowNum)" << endl;
-    cout << (totalNum / rowNum) << "(colNum)" << endl;
-
-    rowNum = 0;
-    totalNum = 0;
-    cout << "Shade" << endl;
-    for (const auto& row : allShadePixels) {
-        for (const auto& pixel : row) {
-            //cout << pixel.data << " ";
-            //if (pixel.data != 0) {
-                totalNum++;
-            //}
-        }
-        //cout << "endline" << endl;'
-        rowNum++;
-    }
-    cout << totalNum << "(totalNum)" << endl;
-    cout << rowNum << "(rowNum)" << endl;
-    cout << (totalNum / rowNum) << "(colNum)" << endl;
-
-    rowNum = 0;
-    totalNum = 0;
-    cout << "Wind" << endl;
-    for (const auto& row : allWindPixels) {
-        for (const auto& pixel : row) {
-            //cout << pixel.data << " ";
-            //if (pixel.data != 0) {
-            totalNum++;
-            //}
-        }
-        //cout << "endline" << endl;'
-        rowNum++;
-    }
-    cout << totalNum << "(totalNum)" << endl;
-    cout << rowNum << "(rowNum)" << endl;
-    cout << (totalNum / rowNum) << "(colNum)" << endl;
 
     return 0;
 }
@@ -199,23 +115,25 @@ vector<vector<LongLatPixel>> parseLongLatData(const vector<vector<string>> &long
     return pixels;
 }
 
-LongLatPixel getCoordsFromLongLat(const vector<LongLatPixel>& pixels, double longitude, double latitude) {
+LongLatPixel getCoordsFromLongLat(const vector<vector<LongLatPixel>>& pixels, const double longitude, const double latitude) {
     if (pixels.empty()) {
         cerr << "Error: pixel list is empty!" << endl;
         return LongLatPixel{-1, -1, 0.0, 0.0};
     }
-    double minLongDiff = abs(longitude - pixels[0].longitude);
-    double minLatDiff = abs(latitude - pixels[0].latitude);
-    double minTotalDiff = minLongDiff + minLatDiff;
-    int minIndex = 0;
-    for (int i = 1; i < pixels.size(); i++) {
-        double longDiff = abs(longitude - pixels[i].longitude);
-        double latDiff = abs(latitude - pixels[i].latitude);
-        double totalDiff = longDiff + latDiff;
-        if (totalDiff < minTotalDiff) {
-            minTotalDiff = totalDiff;
-            minIndex = i;
+    LongLatPixel closestPixel = pixels[0][0];
+    double minDiagDist = numeric_limits<double>::infinity();
+
+    for (const auto & row : pixels) {
+        for (const auto & pixel : row) {
+            double longDiff = longitude - pixel.longitude;
+            double latDiff = latitude - pixel.latitude;
+            double dist = hypot(longDiff, latDiff); // sqrt(dx^2 + dy^2)
+
+            if (dist < minDiagDist) {
+                minDiagDist = dist;
+                closestPixel = pixel;
+            }
         }
     }
-    return pixels[minIndex];
+    return closestPixel;
 }
