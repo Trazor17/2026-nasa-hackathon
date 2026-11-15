@@ -15,7 +15,7 @@ img_hue = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)[:, :, 0] * 2
 
 df = pd.DataFrame(img_hue)
 
-df_cond = df.map(lambda x: MIN_VAL + (x / 240) * (MAX_VAL - MIN_VAL))
+df_cond = df.map(lambda x: MIN_VAL + (1 - (x / 240)) * (MAX_VAL - MIN_VAL))
 arr_cond = df_cond.to_numpy(dtype=np.float32)
 arr_cond = cv2.resize(arr_cond, (1105, 1230), interpolation=cv2.INTER_LINEAR)
 pd.DataFrame(arr_cond).to_csv("src/surface_wind_stress_calc/surface_wind_stress.csv", index=False, header=False)
