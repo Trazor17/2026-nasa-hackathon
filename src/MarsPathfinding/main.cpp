@@ -38,26 +38,14 @@ vector<vector<LongLatPixel>> parseLongLatData(const vector<vector<string>> &,int
 LongLatPixel getCoordsFromLongLat(const vector<vector<LongLatPixel>>&,double,double);
 double calcMoveCost(int,int,int,int,vector<vector<Pixel>>&,vector<vector<Pixel>>&,vector<vector<Pixel>>&,vector<vector<Pixel>>&);
 vector<pair<int,int>> findPathAStar(int,int,int,int,int,int,vector<vector<Pixel>>&,vector<vector<Pixel>>&,vector<vector<Pixel>>&,vector<vector<Pixel>>&);
-vector<pair<int,int>> generatePath(double&,double&,double&,double&);
+vector<pair<int,int>> generatePath(double,double,double,double);
 
 int main() {
     auto path = generatePath(137.13782, -4.26659, 137.70911, -4.89144);
-    
-    //basic testing for now
-    if (path.empty()) {
-        cout << "no valid path" << endl;
-    }
-    else {
-        cout << "path found with " << path.size() << " steps" << endl;
-    }
-
-    for (auto p : path) {
-        cout << p.first << " " << p.second << endl;
-    }
     return 0;
 }
 
-vector<pair<int,int>> generatePath(const double& startLongitude, const double& startLatitude, const double& endLongitude, const double& endLatitude) {
+vector<pair<int,int>> generatePath(double startLongitude,double startLatitude,double endLongitude,double endLatitude) {
     int imageWidth = 1105;
     int imageHeight = 1230;
 
