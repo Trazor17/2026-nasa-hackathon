@@ -1,5 +1,6 @@
 Python:
 - pillow
+- numpy
 
 C++:
 - nlohmann/json.hpp
