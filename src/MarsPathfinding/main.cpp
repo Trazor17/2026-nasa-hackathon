@@ -38,35 +38,11 @@ vector<vector<LongLatPixel>> parseLongLatData(const vector<vector<string>> &,int
 LongLatPixel getCoordsFromLongLat(const vector<vector<LongLatPixel>>&,double,double);
 double calcMoveCost(int,int,int,int,vector<vector<Pixel>>&,vector<vector<Pixel>>&,vector<vector<Pixel>>&,vector<vector<Pixel>>&);
 vector<pair<int,int>> findPathAStar(int,int,int,int,int,int,vector<vector<Pixel>>&,vector<vector<Pixel>>&,vector<vector<Pixel>>&,vector<vector<Pixel>>&);
+vector<pair<int,int>> generatePath(double&,double&,double&,double&);
 
 int main() {
-    int imageWidth = 1105;
-    int imageHeight = 1230;
-
-    vector<vector<string>> longLatData = getDataFromFile("pixelLongitudes&Latitudes.csv");
-    vector<vector<string>> elevationData = getDataFromFile("elevation_data.csv");
-    vector<vector<string>> slopeData = getDataFromFile("local_slope_inclanation.csv");
-    vector<vector<string>> shadeData = getDataFromFile("shade_data.csv");
-    vector<vector<string>> windData = getDataFromFile("surface_wind_stress.csv");
-
-    vector<vector<LongLatPixel>> allLongLatPixels = parseLongLatData(longLatData, imageHeight, imageWidth);
-    vector<vector<Pixel>> allHeightPixels = parseData(elevationData);
-    vector<vector<Pixel>> allSlopePixels = parseData(slopeData);
-    vector<vector<Pixel>> allShadePixels = parseData(shadeData);
-    vector<vector<Pixel>> allWindPixels = parseData(windData);
-
-    // top left
-    double startLongitude = 137.13782;
-    double startLatitude = -4.26659;
-    // bottom right
-    double endLongitude = 137.70911;
-    double endLatitude = -4.89144;
-
-    LongLatPixel startPixel = getCoordsFromLongLat(allLongLatPixels, startLongitude, startLatitude);
-    LongLatPixel endPixel = getCoordsFromLongLat(allLongLatPixels, endLongitude, endLatitude);
-
-    auto path = findPathAStar(startPixel.x, startPixel.y, endPixel.x, endPixel.y, imageWidth, imageHeight, allHeightPixels, allSlopePixels, allShadePixels, allWindPixels);
-
+    auto path = generatePath(137.13782, -4.26659, 137.70911, -4.89144);
+    
     //basic testing for now
     if (path.empty()) {
         cout << "no valid path" << endl;
@@ -81,8 +57,29 @@ int main() {
     return 0;
 }
 
-vector<vector<int>> generatePath(double startLongitude, double startLatitude, double endLongitude, double endLatitude) {
+vector<pair<int,int>> generatePath(const double& startLongitude, const double& startLatitude, const double& endLongitude, const double& endLatitude) {
+    int imageWidth = 1105;
+    int imageHeight = 1230;
 
+    cout << "Getting data from files..." << endl;
+    vector<vector<string>> longLatData = getDataFromFile("pixelLongitudes&Latitudes.csv");
+    vector<vector<string>> elevationData = getDataFromFile("elevation_data.csv");
+    vector<vector<string>> slopeData = getDataFromFile("local_slope_inclanation.csv");
+    vector<vector<string>> shadeData = getDataFromFile("shade_data.csv");
+    vector<vector<string>> windData = getDataFromFile("surface_wind_stress.csv");
+
+    cout << "Parsing data..." << endl;
+    vector<vector<LongLatPixel>> allLongLatPixels = parseLongLatData(longLatData, imageHeight, imageWidth);
+    vector<vector<Pixel>> allHeightPixels = parseData(elevationData);
+    vector<vector<Pixel>> allSlopePixels = parseData(slopeData);
+    vector<vector<Pixel>> allShadePixels = parseData(shadeData);
+    vector<vector<Pixel>> allWindPixels = parseData(windData);
+
+    LongLatPixel startPixel = getCoordsFromLongLat(allLongLatPixels, startLongitude, startLatitude);
+    LongLatPixel endPixel = getCoordsFromLongLat(allLongLatPixels, endLongitude, endLatitude);
+
+    auto path = findPathAStar(startPixel.x, startPixel.y, endPixel.x, endPixel.y, imageWidth, imageHeight, allHeightPixels, allSlopePixels, allShadePixels, allWindPixels);
+    return path;
 }
 
 vector<vector<string>> getDataFromFile(const string& filepath) {
