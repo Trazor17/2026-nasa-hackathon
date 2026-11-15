@@ -81,6 +81,10 @@ int main() {
     return 0;
 }
 
+vector<vector<int>> generatePath(double startLongitude, double startLatitude, double endLongitude, double endLatitude) {
+
+}
+
 vector<vector<string>> getDataFromFile(const string& filepath) {
     vector<vector<string>> fileData;
     string tempLine;
