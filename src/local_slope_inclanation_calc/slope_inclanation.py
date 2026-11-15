@@ -17,5 +17,5 @@ df = pd.DataFrame(img_hue)
 
 df_cond = df.map(lambda x: MIN_VAL + (x / 240) * (MAX_VAL - MIN_VAL))
 arr_cond = df_cond.to_numpy(dtype=np.float32)
-arr_cond = cv2.resize(arr_cond, (1230, 1105), interpolation=cv2.INTER_LINEAR)
+arr_cond = cv2.resize(arr_cond, (1105, 1230), interpolation=cv2.INTER_LINEAR)
 pd.DataFrame(arr_cond).to_csv("src/local_slope_inclanation_calc/local_slope_inclanation.csv", index=False, header=False)
