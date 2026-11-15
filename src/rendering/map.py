@@ -1,9 +1,12 @@
-from PIL import Image, ImageDraw, ImageTk
-import tkinter as tk
+from PIL import Image, ImageDraw
 import math
+import sys
+import json
+from pathlib import Path
 
 IMG_SRC_MOSAIC = "src/images/cropped_black_white_mosaic.png"
 IMG_SRC_TOPOGRAPHIC = "src/images/cropped_topographic.png"
+RENDER_PATH = "renders/"
 
 class Map:
     def __init__(self, base_img:str, map_dimensions:list = None, route:list = None):
@@ -50,21 +53,21 @@ class Map:
             region = [header_location[0] - x_dist, header_location[1] - y_dist, header_location[0] + x_dist, header_location[1] + y_dist]
             result = result.crop(region)
 
-        root = tk.Tk()
-        root.title("Mars Navigator Map")
-
-        tk_image = ImageTk.PhotoImage(result)
-
-        label = tk.Label(root, image=tk_image)
-        label.pack()
-
-        root.mainloop()
+        result.save(Path(RENDER_PATH + "render.png"))
 
     def __get_path_angle(self, pt1:list, pt2:list):
         rad = math.atan2(pt2[1] - pt1[1], pt2[0] - pt1[0])
         return math.degrees(rad)
 
 if __name__ == "__main__":
-    route = [(350, 490), (420, 810), (580, 920)]
-    map = Map(IMG_SRC_MOSAIC, map_dimensions=[400, 400], route=route)
+
+    base_img = sys.argv[1]
+    map_dimensions = [int(sys.argv[2]), int(sys.argv[3])]
+    route = json.loads(sys.argv[4])
+
+    map = Map(base_img, map_dimensions=map_dimensions, route=route)
     map.render(True)
+
+    '''route = [(552, 588), (420, 810), (580, 920)]
+    map = Map(IMG_SRC_MOSAIC, route=route)
+    map.render(True)'''
