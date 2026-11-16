@@ -11,10 +11,10 @@ int main()
     int max_width = 1105;
     int max_height = 1230;
 
-    int render_width = 1000;
-    int render_height = 1000;
+    int render_width = 700;
+    int render_height = 700;
 
-    int header_rotation = 73;
+    int header_rotation = 170;
 
     vector<vector<double>> waypoints_longlat = {
         {137.44163, 4.58947},
@@ -43,10 +43,13 @@ int main()
     }
     json j_w = waypoints;
 
-    vector<pair<int, int>> route = generatePath(137.44163, -4.58947, 137.38036, -4.72476);
+    vector<pair<int, int>> route = generatePath(137.5, -4.6, 137.5, -4.6);
     json j = route;
 
-    string cmd = "uv run src/rendering/map.py -b \"src/images/cropped_topographic.png\" -x " + to_string(render_width) + " -y " + to_string(render_height) + " -d " + to_string(header_rotation) + " -r \"" + j.dump() + "\" -w \"" + j_w.dump() + "\"";
+    vector<int> center = {553, 615};
+    json j_c = center;
+
+    string cmd = "uv run src/rendering/map.py -b \"src/images/cropped_topographic.png\" -x " + to_string(render_width) + " -y " + to_string(render_height) + " -d " + to_string(header_rotation) + " -r \"" + j.dump() + "\" -w \"" + j_w.dump() + "\" " + " -c \"" + j_c.dump() + "\"";
 
     system(cmd.c_str());
 

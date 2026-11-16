@@ -132,8 +132,8 @@ LongLatPixel getCoordsFromLongLat(const vector<vector<LongLatPixel>>& pixels, co
 
 double calcMoveCost(int x1, int y1, int x2, int y2, vector<vector<Pixel>>& elevation, vector<vector<Pixel>>& slope, vector<vector<Pixel>>& shade, vector<vector<Pixel>>& wind) {
     // MOVEMENT WEIGHTS
-    const double ELEVATION_CHANGE_WEIGHT = 3.0;
-    const double SLOPE_WEIGHT = 5.0;
+    const double ELEVATION_CHANGE_WEIGHT = 0.0;
+    const double SLOPE_WEIGHT = 7.0;
     const double SHADE_WEIGHT = 0.5;
     const double WIND_WEIGHT = 2.0;
 

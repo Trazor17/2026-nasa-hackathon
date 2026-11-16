@@ -23,7 +23,7 @@ class Map:
 
         self.route = route
 
-    def render(self, include_route, header_rotation = 0, header_location = None, waypoints = None, labeled_waypoint = None):
+    def render(self, include_route, center = None, header_rotation = 0, header_location = None, waypoints = None, labeled_waypoint = None):
         header_size = 20
         marker_size = 7
 
@@ -40,7 +40,7 @@ class Map:
                 if (point < len(self.route) - 1):
                     draw_path.line([self.route[point], self.route[point + 1]], fill=(255, 255, 255, 255), width=3)
 
-            draw_path.circle(self.route[-1], marker_size, fill=(255, 255, 255, 255), outline=(0, 0, 0, 255), width=2)
+            #draw_path.circle(self.route[-1], marker_size, fill=(255, 255, 255, 255), outline=(0, 0, 0, 255), width=2)
 
             result = Image.alpha_composite(result, path)
         else:
@@ -70,14 +70,17 @@ class Map:
 
 
         ### CROP ###
+        if center == None:
+            center = header_location
+
         if self.crop_to_region:
             x_dist = round(self.map_dimensions[0] / 2)
             y_dist = round(self.map_dimensions[1] / 2)
-            region = [header_location[0] - x_dist, header_location[1] - y_dist, header_location[0] + x_dist, header_location[1] + y_dist]
+            region = [center[0] - x_dist, center[1] - y_dist, center[0] + x_dist, center[1] + y_dist]
             result = result.crop(region)
 
         ### SAVE IMAGE ###
-        result.save(Path(RENDER_PATH + "render.png"))
+        result.save(Path(RENDER_PATH + "render3.png"))
 
     def __rotate_header(self, corners, center, angle) -> list:
         rad = np.deg2rad(angle)
@@ -101,6 +104,7 @@ if __name__ == "__main__":
     parser.add_argument("-x", "--x_width", type=int)
     parser.add_argument("-y", "--y_height", type=int)
     parser.add_argument("-d", "--direction_header", type=int, default=0)
+    parser.add_argument("-c", "--center_point", type=str, default="")
     parser.add_argument("-r", "--route", type=str, default="")
     parser.add_argument("-w", "--waypoints", type=str, default="")
     parser.add_argument("-l", "--labeled_waypoint", type=str, default="")
@@ -128,6 +132,11 @@ if __name__ == "__main__":
     else:
         labeled_waypoint = None
 
+    if args.center_point != "":
+        center_point = json.loads(args.center_point)
+    else:
+        center_point = None
+
 
     map = Map(base_img, map_dimensions=map_dimensions, route=route)
-    map.render(include_route, header_rotation=header_rotation, waypoints=waypoints, labeled_waypoint=labeled_waypoint)
+    map.render(include_route, header_rotation=header_rotation, center=center_point, waypoints=waypoints, labeled_waypoint=labeled_waypoint)
